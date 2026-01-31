@@ -642,3 +642,47 @@ button{ border:none; outline:none; font-family: inherit; }
   .choices{ grid-template-columns: 1fr; }
   .factGrid{ grid-template-columns: 1fr; }
 }
+
+/* ===== Fixes (readability + avatar centering + story moment layout) ===== */
+
+/* Ensure interactive tiles use light text (some browsers default button text to black) */
+.bin, .choice, .device, .item, .miniBtn, .tab, .primary, .secondary, .chip {
+  color: var(--text);
+}
+
+/* Improve secondary text contrast in bins/choices */
+.bin .hint, .choice .desc, .item .small, .device .timerLine {
+  color: var(--muted);
+}
+
+/* Make the small "Select" tag readable */
+.tag {
+  color: #061228;
+}
+
+/* Avatar should stay centered inside the preview frame */
+.avatarPreviewFrame {
+  overflow: hidden;
+}
+.avatarPreview {
+  display: grid;
+  place-items: center;
+}
+.avatarPreview svg {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Center story content in the game area more clearly */
+.gameArea .emptyState .storyCenter {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.gameArea .emptyState .storyLine {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 1.4;
+  color: var(--text);
+}
