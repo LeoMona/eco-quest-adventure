@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Eco Quest Adventure — Climate Game for Kids</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="stars" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">🌍</div>
+      <div>
+        <h1>Eco Quest Adventure</h1>
+        <p class="subtitle">Missions • Characters • Biomes • Teacher Dashboard</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button id="btnRead" class="chip" aria-pressed="false" title="Read aloud">
+        🔊 Read Aloud: Off
+      </button>
+      <button id="btnReset" class="chip danger" title="Reset all progress on this device">
+        ♻️ Reset
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HUD -->
+    <section class="hud" aria-label="Game status">
+      <div class="hud-card">
+        <div class="hud-label">Player</div>
+        <div class="hud-value" id="hudPlayer">Guest</div>
+      </div>
+      <div class="hud-card">
+        <div class="hud-label">Stars</div>
+        <div class="hud-value" id="hudStars">⭐ 0</div>
+      </div>
+      <div class="hud-card">
+        <div class="hud-label">Badge</div>
+        <div class="hud-value" id="hudBadge">—</div>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <nav class="tabs" aria-label="Main navigation">
+      <button class="tab active" data-screen="home">🏠 Home</button>
+      <button class="tab" data-screen="map">🗺️ World Map</button>
+      <button class="tab" data-screen="quest">🎒 Quest</button>
+      <button class="tab" data-screen="learn">📚 Learn</button>
+      <button class="tab" data-screen="teacher">🧑‍🏫 Teacher</button>
+    </nav>
+
+    <!-- HOME -->
+    <section id="screen-home" class="screen active" role="region" aria-label="Home screen">
+      <div class="card hero">
+        <div class="hero-left">
+          <h2>Welcome, Eco Hero! 🌱</h2>
+          <p>
+            Join <b>EcoBot</b> and friends on a planet-saving adventure.
+            Complete quests in different biomes and unlock new places on the map!
+          </p>
+
+          <div class="cta-row">
+            <button class="primary big" id="btnGoMap">Go to World Map 🗺️</button>
+            <button class="secondary big" id="btnHow">How to Play ❓</button>
+          </div>
+
+          <div class="tips" id="howPanel" hidden>
+            <h3>How to Play</h3>
+            <ul>
+              <li>Pick a biome on the <b>World Map</b>.</li>
+              <li>Read the story, then play simple mini-missions.</li>
+              <li>Earn ⭐ stars, unlock new biomes, collect badges!</li>
+              <li>Teacher can manage students and export progress in <b>Teacher</b> tab.</li>
+            </ul>
+            <p class="small">Tip: Turn on “Read Aloud” for younger kids.</p>
+          </div>
+        </div>
+
+        <div class="hero-right" aria-hidden="true">
+          <div class="planet-card">
+            <div class="planet">🤖</div>
+            <div class="bubble">“Hi! I’m EcoBot. Let’s help Earth!”</div>
+            <div class="mini-icons">
+              <span>🌲</span><span>🌊</span><span>🏙️</span><span>♻️</span><span>💡</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>Quick Win</h3>
+          <p class="bigText">Try today: <span id="quickWin"></span></p>
+          <p class="small">Small actions add up!</p>
+        </div>
+
+        <div class="card">
+          <h3>Story Hook</h3>
+          <p class="bigText" id="storyHook"></p>
+          <p class="small">Go to the map to start your first quest.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section id="screen-map" class="screen" role="region" aria-label="World map screen">
+      <div class="card">
+        <div class="row between center">
+          <h2>World Map 🗺️</h2>
+          <div class="pill">Complete biomes to unlock the next!</div>
+        </div>
+
+        <div class="mapWrap" aria-label="Biome map">
+          <div class="mapSky" aria-hidden="true"></div>
+          <div class="mapGrid" id="mapGrid"></div>
+        </div>
+
+        <div class="card inner">
+          <h3>Map Tip</h3>
+          <p class="small">
+            Each biome has a quest with 3 mini missions. Finish the biome to unlock the next.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUEST -->
+    <section id="screen-quest" class="screen" role="region" aria-label="Quest screen">
+      <div class="card">
+        <div class="row between center">
+          <h2 id="questTitle">Quest</h2>
+          <div class="pill" id="questStep">Scene 1</div>
+        </div>
+
+        <!-- Dialogue / Story -->
+        <div class="dialogue" id="dialogueBox" aria-label="Story dialogue">
+          <div class="avatar" id="dlgAvatar" aria-hidden="true">🤖</div>
+          <div class="speech">
+            <div class="who" id="dlgWho">EcoBot</div>
+            <div class="say" id="dlgText">Choose a biome to begin!</div>
+          </div>
+        </div>
+
+        <!-- Game area -->
+        <div id="gameArea" class="gameArea">
+          <div class="emptyState">
+            <div class="bigText">Pick a biome on the World Map 🗺️</div>
+            <p class="small">Your quest will appear here.</p>
+          </div>
+        </div>
+
+        <div class="row between">
+          <button id="btnQuestExit" class="secondary">⬅ Exit to Map</button>
+          <div class="row">
+            <button id="btnQuestBack" class="secondary">◀ Back</button>
+            <button id="btnQuestNext" class="primary">Next ▶</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hint">
+        <h3>Why it matters</h3>
+        <p id="whyItMatters">Your choices can help nature, oceans, and cities!</p>
+      </div>
+    </section>
+
+    <!-- LEARN -->
+    <section id="screen-learn" class="screen" role="region" aria-label="Learn screen">
+      <div class="card">
+        <h2>Learn Fast Facts 🌦️</h2>
+        <p class="small">Tap a card to reveal a fact.</p>
+
+        <div class="factGrid" id="factGrid" aria-label="Fact cards"></div>
+      </div>
+    </section>
+
+    <!-- TEACHER -->
+    <section id="screen-teacher" class="screen" role="region" aria-label="Teacher dashboard screen">
+      <div class="card">
+        <div class="row between center">
+          <h2>Teacher Dashboard 🧑‍🏫</h2>
+          <div class="pill">Local only • Works offline</div>
+        </div>
+
+        <div class="teacherGrid">
+          <div class="card inner">
+            <h3>Class Setup</h3>
+
+            <label class="fieldLabel" for="className">Class name</label>
+            <input id="className" class="field" placeholder="e.g., Grade 4B" />
+
+            <div class="row">
+              <div class="grow">
+                <label class="fieldLabel" for="studentName">Add student</label>
+                <input id="studentName" class="field" placeholder="Student name" />
+              </div>
+              <button id="btnAddStudent" class="primary" style="align-self:end;">+ Add</button>
+            </div>
+
+            <div class="row between center">
+              <div>
+                <div class="small">Active student (for playing):</div>
+                <div class="bigText" id="activeStudentLabel">Guest</div>
+              </div>
+              <button id="btnProjector" class="secondary">📽️ Projector Mode</button>
+            </div>
+
+            <div class="row" style="flex-wrap:wrap;">
+              <button id="btnExportCSV" class="secondary">⬇ Export CSV</button>
+              <button id="btnResetClass" class="chip danger">Reset Class Data</button>
+            </div>
+            <p class="small">
+              Note: Data is stored on this device only. If you change device/browser, data won't follow.
+            </p>
+          </div>
+
+          <div class="card inner">
+            <h3>Students</h3>
+            <div id="studentList" class="studentList" aria-label="Student list"></div>
+          </div>
+
+          <div class="card inner">
+            <h3>Leaderboard</h3>
+            <div id="leaderboard" class="leaderboard" aria-label="Leaderboard"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <footer class="footer">
+    <span>Eco Quest Adventure • Story-based climate learning • Front-end only</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
