@@ -1131,4 +1131,5 @@ function init(){
 
   setScreen("home");
 }
+
 init();
