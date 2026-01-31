@@ -4,18 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Eco Quest Adventure — Climate Game for Kids</title>
+  <meta name="description" content="Story-based climate game for kids with biomes, quests, avatar builder, and teacher dashboard." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <div class="stars" aria-hidden="true"></div>
+  <div class="bg-doodles" aria-hidden="true"></div>
 
   <header class="topbar">
     <div class="brand">
       <div class="logo" aria-hidden="true">🌍</div>
       <div>
         <h1>Eco Quest Adventure</h1>
-        <p class="subtitle">Missions • Characters • Biomes • Teacher Dashboard</p>
+        <p class="subtitle">Cartoon Missions • Biomes • Avatars • Teacher Dashboard</p>
       </div>
     </div>
 
@@ -23,7 +24,7 @@
       <button id="btnRead" class="chip" aria-pressed="false" title="Read aloud">
         🔊 Read Aloud: Off
       </button>
-      <button id="btnReset" class="chip danger" title="Reset all progress on this device">
+      <button id="btnResetAll" class="chip danger" title="Reset all progress on this device">
         ♻️ Reset
       </button>
     </div>
@@ -59,10 +60,10 @@
     <section id="screen-home" class="screen active" role="region" aria-label="Home screen">
       <div class="card hero">
         <div class="hero-left">
-          <h2>Welcome, Eco Hero! 🌱</h2>
+          <h2>Welcome, Eco Hero! 🌟</h2>
           <p>
-            Join <b>EcoBot</b> and friends on a planet-saving adventure.
-            Complete quests in different biomes and unlock new places on the map!
+            Pick your hero, explore biomes, and complete fun missions to help Earth.
+            Meet talking animals and stop the silly villain <b>Captain Carbon</b>! 😂
           </p>
 
           <div class="cta-row">
@@ -73,37 +74,59 @@
           <div class="tips" id="howPanel" hidden>
             <h3>How to Play</h3>
             <ul>
-              <li>Pick a biome on the <b>World Map</b>.</li>
-              <li>Read the story, then play simple mini-missions.</li>
-              <li>Earn ⭐ stars, unlock new biomes, collect badges!</li>
-              <li>Teacher can manage students and export progress in <b>Teacher</b> tab.</li>
+              <li>Create your hero on the Home screen 🎨</li>
+              <li>Choose a biome on the World Map 🗺️</li>
+              <li>Read story scenes and play mini missions 🎮</li>
+              <li>Earn ⭐ stars, unlock items, and print certificates 🏅</li>
             </ul>
             <p class="small">Tip: Turn on “Read Aloud” for younger kids.</p>
           </div>
         </div>
 
         <div class="hero-right" aria-hidden="true">
-          <div class="planet-card">
-            <div class="planet">🤖</div>
-            <div class="bubble">“Hi! I’m EcoBot. Let’s help Earth!”</div>
-            <div class="mini-icons">
-              <span>🌲</span><span>🌊</span><span>🏙️</span><span>♻️</span><span>💡</span>
+          <div class="comic-panel">
+            <div class="sticker">NEW!</div>
+            <div class="panel-title">Meet your team!</div>
+            <div class="panel-row">
+              <span class="char">🤖 EcoBot</span>
+              <span class="char">🦉 Ollie</span>
+              <span class="char">🐢 Tara</span>
+              <span class="char">🦀 Coach</span>
             </div>
+            <div class="villain">😂 Captain Carbon</div>
           </div>
         </div>
       </div>
 
+      <!-- Avatar builder (Option A) -->
       <div class="grid2">
         <div class="card">
-          <h3>Quick Win</h3>
-          <p class="bigText">Try today: <span id="quickWin"></span></p>
-          <p class="small">Small actions add up!</p>
+          <div class="row between center">
+            <h3>Create Your Hero 🎨</h3>
+            <span class="pill smallPill">Unlock hats & gear with ⭐</span>
+          </div>
+
+          <div class="avatarHome">
+            <div class="avatarPreviewFrame">
+              <div id="homeAvatarPreview" class="avatarPreview" aria-label="Avatar preview"></div>
+            </div>
+
+            <div class="avatarHomeInfo">
+              <div class="bigText" id="homeAvatarName">Your Hero</div>
+              <p class="small" id="homeAvatarHint">Customize your hero before the adventure!</p>
+              <div class="row" style="flex-wrap:wrap;">
+                <button class="primary" id="btnOpenAvatar">Create / Edit Hero ✨</button>
+                <button class="secondary" id="btnStartQuest">Start Adventure 🚀</button>
+              </div>
+              <p class="small">Your hero appears on the map and on certificates.</p>
+            </div>
+          </div>
         </div>
 
         <div class="card">
-          <h3>Story Hook</h3>
-          <p class="bigText" id="storyHook"></p>
-          <p class="small">Go to the map to start your first quest.</p>
+          <h3>Today’s Eco Tip</h3>
+          <p class="bigText">Try: <span id="quickWin"></span></p>
+          <p class="small" id="storyHook"></p>
         </div>
       </div>
     </section>
@@ -113,18 +136,29 @@
       <div class="card">
         <div class="row between center">
           <h2>World Map 🗺️</h2>
-          <div class="pill">Complete biomes to unlock the next!</div>
+          <div class="pill" id="missionLockPill">Teacher Mission: —</div>
         </div>
 
         <div class="mapWrap" aria-label="Biome map">
-          <div class="mapSky" aria-hidden="true"></div>
-          <div class="mapGrid" id="mapGrid"></div>
+          <div class="mapHeader">
+            <div class="mapLegend">
+              <span class="legendItem"><span class="dot green"></span> Unlocked</span>
+              <span class="legendItem"><span class="dot gold"></span> Completed</span>
+              <span class="legendItem"><span class="dot gray"></span> Locked</span>
+            </div>
+            <div class="mapRight">
+              <button class="secondary" id="btnMapFocus">Focus Path ✨</button>
+            </div>
+          </div>
+
+          <div id="mapStage" class="mapStage" aria-label="Interactive map stage"></div>
         </div>
 
         <div class="card inner">
-          <h3>Map Tip</h3>
+          <h3>Adventure Tip</h3>
           <p class="small">
-            Each biome has a quest with 3 mini missions. Finish the biome to unlock the next.
+            Finish the Forest quest to unlock Ocean, then finish Ocean to unlock City.
+            Watch the travel line appear!
           </p>
         </div>
       </div>
@@ -138,16 +172,14 @@
           <div class="pill" id="questStep">Scene 1</div>
         </div>
 
-        <!-- Dialogue / Story -->
         <div class="dialogue" id="dialogueBox" aria-label="Story dialogue">
-          <div class="avatar" id="dlgAvatar" aria-hidden="true">🤖</div>
+          <div class="avatarBubble" id="dlgAvatar" aria-hidden="true">🤖</div>
           <div class="speech">
             <div class="who" id="dlgWho">EcoBot</div>
             <div class="say" id="dlgText">Choose a biome to begin!</div>
           </div>
         </div>
 
-        <!-- Game area -->
         <div id="gameArea" class="gameArea">
           <div class="emptyState">
             <div class="bigText">Pick a biome on the World Map 🗺️</div>
@@ -166,16 +198,15 @@
 
       <div class="card hint">
         <h3>Why it matters</h3>
-        <p id="whyItMatters">Your choices can help nature, oceans, and cities!</p>
+        <p id="whyItMatters">Your choices can help forests, oceans, and cities!</p>
       </div>
     </section>
 
     <!-- LEARN -->
     <section id="screen-learn" class="screen" role="region" aria-label="Learn screen">
       <div class="card">
-        <h2>Learn Fast Facts 🌦️</h2>
-        <p class="small">Tap a card to reveal a fact.</p>
-
+        <h2>Learn Fast Facts 📚</h2>
+        <p class="small">Tap a card to reveal a fact. Great for ages 5–14.</p>
         <div class="factGrid" id="factGrid" aria-label="Fact cards"></div>
       </div>
     </section>
@@ -185,7 +216,7 @@
       <div class="card">
         <div class="row between center">
           <h2>Teacher Dashboard 🧑‍🏫</h2>
-          <div class="pill">Local only • Works offline</div>
+          <div class="pill">Offline • LocalStorage • Works on one device</div>
         </div>
 
         <div class="teacherGrid">
@@ -211,13 +242,30 @@
               <button id="btnProjector" class="secondary">📽️ Projector Mode</button>
             </div>
 
-            <div class="row" style="flex-wrap:wrap;">
+            <div class="divider"></div>
+
+            <h3>Mission Assignment 🎯</h3>
+            <p class="small">Restrict what students can play today.</p>
+
+            <label class="fieldLabel" for="missionSelect">Today's mission</label>
+            <select id="missionSelect" class="field">
+              <option value="all">Full Adventure (All Biomes)</option>
+              <option value="forest">Forest Only 🌲</option>
+              <option value="ocean">Ocean Only 🌊</option>
+              <option value="city">City Only 🏙️</option>
+            </select>
+
+            <div class="row" style="flex-wrap:wrap; margin-top:10px;">
+              <button id="btnSaveMission" class="secondary">Save Mission</button>
               <button id="btnExportCSV" class="secondary">⬇ Export CSV</button>
-              <button id="btnResetClass" class="chip danger">Reset Class Data</button>
+              <button id="btnResetClass" class="chip danger">Reset Class</button>
             </div>
-            <p class="small">
-              Note: Data is stored on this device only. If you change device/browser, data won't follow.
-            </p>
+
+            <div class="divider"></div>
+
+            <h3>Certificates 🏅</h3>
+            <p class="small">Print a certificate for the active student.</p>
+            <button id="btnPrintCert" class="primary">🖨️ Print Certificate</button>
           </div>
 
           <div class="card inner">
@@ -230,16 +278,128 @@
             <div id="leaderboard" class="leaderboard" aria-label="Leaderboard"></div>
           </div>
         </div>
+
+        <p class="small" style="margin-top:10px;">
+          Note: Data is stored on this device only. Use CSV export for records.
+        </p>
       </div>
     </section>
 
-    <!-- TOAST -->
+    <!-- Toast -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  </main>
 
-  <footer class="footer">
-    <span>Eco Quest Adventure • Story-based climate learning • Front-end only</span>
-  </footer>
+    <!-- Avatar Builder Modal -->
+    <div id="avatarModal" class="modal" role="dialog" aria-modal="true" aria-label="Avatar builder" hidden>
+      <div class="modalBackdrop" data-close="1"></div>
+
+      <div class="modalCard">
+        <div class="row between center">
+          <h2>Hero Builder 🎨</h2>
+          <button class="chip danger" id="btnCloseAvatar" aria-label="Close hero builder">✕ Close</button>
+        </div>
+
+        <div class="row wrap2">
+          <div class="modalLeft">
+            <div class="avatarPreviewFrame bigFrame">
+              <div id="avatarPreview" class="avatarPreview bigPreview" aria-label="Avatar preview in builder"></div>
+              <div class="unlockHint" id="unlockHint">Earn ⭐ to unlock cool gear!</div>
+            </div>
+
+            <div class="row" style="flex-wrap:wrap; margin-top:10px;">
+              <button id="btnRandomHero" class="secondary">🎲 Random</button>
+              <button id="btnPoseWiggle" class="secondary">✨ Wiggle</button>
+            </div>
+
+            <div class="card inner" style="margin-top:12px;">
+              <h3>Unlock Progress</h3>
+              <div class="progressBar">
+                <div id="unlockFill" class="progressFill" style="width:0%"></div>
+              </div>
+              <div class="small" id="unlockText">0 / 30 ⭐</div>
+            </div>
+          </div>
+
+          <div class="modalRight">
+            <div class="builderGrid">
+              <div class="group">
+                <div class="groupTitle">Basics</div>
+
+                <label class="fieldLabel" for="heroDisplayName">Hero name</label>
+                <input id="heroDisplayName" class="field" placeholder="e.g., Eco Ranger" />
+
+                <label class="fieldLabel" for="skinTone">Skin tone</label>
+                <select id="skinTone" class="field"></select>
+
+                <label class="fieldLabel" for="bodyShape">Body shape</label>
+                <select id="bodyShape" class="field"></select>
+
+                <label class="fieldLabel" for="pose">Pose</label>
+                <select id="pose" class="field"></select>
+
+                <label class="fieldLabel" for="outline">Outline</label>
+                <select id="outline" class="field"></select>
+              </div>
+
+              <div class="group">
+                <div class="groupTitle">Face</div>
+
+                <label class="fieldLabel" for="eyes">Eyes</label>
+                <select id="eyes" class="field"></select>
+
+                <label class="fieldLabel" for="mouth">Mouth / Expression</label>
+                <select id="mouth" class="field"></select>
+
+                <label class="fieldLabel" for="cheeks">Cheeks</label>
+                <select id="cheeks" class="field"></select>
+              </div>
+
+              <div class="group">
+                <div class="groupTitle">Hair</div>
+
+                <label class="fieldLabel" for="hairStyle">Hair style</label>
+                <select id="hairStyle" class="field"></select>
+
+                <label class="fieldLabel" for="hairColor">Hair color</label>
+                <select id="hairColor" class="field"></select>
+              </div>
+
+              <div class="group">
+                <div class="groupTitle">Outfit</div>
+
+                <label class="fieldLabel" for="outfit">Outfit</label>
+                <select id="outfit" class="field"></select>
+
+                <label class="fieldLabel" for="outfitColor">Outfit color</label>
+                <select id="outfitColor" class="field"></select>
+              </div>
+
+              <div class="group">
+                <div class="groupTitle">Gear (Unlockables)</div>
+
+                <label class="fieldLabel" for="hat">Hat</label>
+                <select id="hat" class="field"></select>
+
+                <label class="fieldLabel" for="accessory">Accessory</label>
+                <select id="accessory" class="field"></select>
+
+                <label class="fieldLabel" for="sidekick">Sidekick</label>
+                <select id="sidekick" class="field"></select>
+
+                <div class="small" id="lockExplain">Some gear unlocks at ⭐ 5, ⭐ 12, ⭐ 20, ⭐ 30.</div>
+              </div>
+            </div>
+
+            <div class="row between center" style="margin-top:12px;">
+              <div class="small">Changes save for the active student automatically.</div>
+              <button id="btnSaveAvatar" class="primary">Save Hero ✅</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
 
   <script src="app.js"></script>
 </body>
